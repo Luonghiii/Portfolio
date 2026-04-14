@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đức Lương | E-Commerce Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace']
+                    },
+                    colors: {
+                        dark: '#09090b',
+                        cardDark: '#18181b',
+                        cardLight: '#ffffff',
+                        textMuted: '#a1a1aa',
+                        textMutedLight: '#64748b',
+                        brand: '#3b82f6',
+                        telegram: '#229ED9',
+                        zalo: '#0068FF',
+                        shopee: '#ee4d2d'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.4s ease, color 0.4s ease; }
+        
+        .bento-card {
+            border-radius: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dark .bento-card {
+            background-color: #18181b;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .dark .bento-card:not(#tilt-card):hover {
+            border-color: rgba(255,255,255,0.15);
+            background-color: #1f1f22; 
+            transform: translateY(-4px); 
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        html:not(.dark) body { background-color: #f8fafc; color: #0f172a; }
+        html:not(.dark) .bento-card {
+            background-color: #ffffff;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        html:not(.dark) .bento-card:not(#tilt-card):hover {
+            border-color: rgba(0,0,0,0.1);
+            transform: translateY(-4px); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .mesh-bg {
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.2) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.2) 0, transparent 50%);
+        }
+        html:not(.dark) .mesh-bg {
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(210,100%,95%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,100%,95%,0.8) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,100%,95%,0.5) 0, transparent 50%);
+        }
+
+        .marquee-container { overflow: hidden; white-space: nowrap; }
+        .marquee-content { display: inline-block; animation: marquee 15s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        ::-webkit-scrollbar { width: 6px; display: none; }
+        .modal-scroll::-webkit-scrollbar { display: block; }
+        .modal-scroll::-webkit-scrollbar-track { background: transparent; }
+        .modal-scroll::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.3); border-radius: 10px; }
+        
+        .noise-bg::before {
+            content: ""; position: absolute; inset: 0; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        .dark .noise-bg::before { opacity: 0.03; }
+        html:not(.dark) .noise-bg::before { opacity: 0.02; mix-blend-mode: multiply; }
+
+        .edu-timeline::before {
+            content: ''; position: absolute; left: 5px; top: 10px; bottom: 10px; width: 2px;
+            background: rgba(148, 163, 184, 0.3); 
+        }
+        .dark .edu-timeline::before { background: rgba(255,255,255,0.1); }
+        
+        #tilt-card { transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transform-style: preserve-3d; }
+        .tilt-content { transform: translateZ(30px); }
+
+        .theme-toggle-btn { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .dark .sun-icon { display: none; }
+        html:not(.dark) .moon-icon { display: none; }
+    </style>
+</head>
+<body class="bg-dark text-white min-h-screen p-4 md:p-6 lg:p-8 flex flex-col items-center justify-center selection:bg-brand selection:text-white noise-bg relative overflow-x-hidden">
+
+    <!-- THEME TOGGLE -->
+    <button onclick="toggleTheme()" class="fixed top-4 right-4 md:top-8 md:right-8 z-40 w-12 h-12 rounded-full backdrop-blur-md border dark:border-white/10 border-slate-200 dark:bg-white/5 bg-white/80 flex items-center justify-center hover:scale-110 transition-all shadow-lg group">
+        <div class="theme-toggle-btn text-xl dark:text-yellow-400 text-slate-700 group-hover:rotate-[360deg]">
+            <i class="fa-solid fa-moon moon-icon"></i>
+            <i class="fa-solid fa-sun sun-icon"></i>
+        </div>
+    </button>
+
+    <main class="w-full max-w-[1000px] mx-auto perspective-1000 mt-8 md:mt-0 relative z-10">
+        
+        <!-- BENTO GRID -->
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 auto-rows-[160px] gap-4">
+            
+            <!-- 1. PROFILE -->
+            <div id="tilt-card" class="bento-card mesh-bg col-span-2 md:col-span-4 row-span-2 p-8 flex flex-col justify-between group cursor-default">
+                <div class="tilt-content flex justify-between items-start">
+                    <div class="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl border dark:border-white/20 border-slate-200 overflow-hidden mb-6 shadow-xl bg-white dark:bg-neutral-800">
+                        <div class="absolute top-0 left-0 bg-shopee text-white text-[8px] font-bold px-2 py-0.5 z-10 rounded-br-lg shadow-md flex items-center gap-1">
+                            <i class="fa-solid fa-check"></i> UTT Mall
+                        </div>
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=LuongBiz&backgroundColor=transparent" alt="Avatar" class="w-full h-full object-cover relative z-0">
+                    </div>
+                    <div class="px-3 py-1.5 rounded-full dark:bg-white/5 bg-slate-900/5 border dark:border-white/10 border-slate-200 text-xs font-medium backdrop-blur-md flex items-center gap-2 text-slate-700 dark:text-white">
+                        <span class="relative flex h-2.5 w-2.5">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                        </span>
+                        Online
+                    </div>
+                </div>
+                <div class="tilt-content">
+                    <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3 text-slate-900 dark:text-white">Đức Lương.</h1>
+                    <p class="dark:text-textMuted text-slate-600 text-base md:text-lg leading-relaxed max-w-xl">
+                        E-commerce Student @ UTT. <br>
+                        Đam mê E-commerce, Tech vibe & Digital Design. Biến data và ý tưởng kinh doanh thành doanh thu trên không gian số.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 2. EDUCATION TIMELINE -->
+            <div class="bento-card col-span-2 row-span-2 p-6 flex flex-col overflow-y-auto group relative">
+                <h3 class="text-xs font-bold dark:text-textMuted text-slate-500 uppercase tracking-wider mb-5 flex items-center gap-2 sticky top-0 dark:bg-[#18181b]/90 bg-white/90 backdrop-blur-sm z-10 py-1">
+                    <i class="ph ph-graduation-cap text-lg"></i> Học vấn
+                </h3>
+                <div class="relative edu-timeline ml-2 space-y-6">
+                    <div class="relative pl-6">
+                        <div class="absolute -left-[5px] top-1 w-3 h-3 bg-brand rounded-full ring-4 dark:ring-brand/20 ring-brand/10 animate-pulse"></div>
+                        <h4 class="font-bold text-sm text-slate-800 dark:text-white">Đại học UTT</h4>
+                        <p class="text-[11px] text-brand font-mono mt-0.5">Khoa Quản trị - Ngành TMĐT</p>
+                    </div>
+                    <div class="relative pl-6">
+                        <div class="absolute -left-[4px] top-1.5 w-2.5 h-2.5 dark:bg-white/30 bg-slate-300 rounded-full border dark:border-white/50 border-slate-400"></div>
+                        <h4 class="font-semibold text-sm text-slate-700 dark:text-white/80">THPT Thái Hòa</h4>
+                        <p class="text-[11px] dark:text-textMuted text-slate-500 mt-0.5">Cấp 3</p>
+                    </div>
+                    <div class="relative pl-6">
+                        <div class="absolute -left-[4px] top-1.5 w-2.5 h-2.5 dark:bg-white/30 bg-slate-300 rounded-full border dark:border-white/50 border-slate-400"></div>
+                        <h4 class="font-semibold text-sm text-slate-700 dark:text-white/80">THCS Hòa Hiếu II</h4>
+                        <p class="text-[11px] dark:text-textMuted text-slate-500 mt-0.5">Cấp 2</p>
+                    </div>
+                    <div class="relative pl-6">
+                        <div class="absolute -left-[4px] top-1.5 w-2.5 h-2.5 dark:bg-white/30 bg-slate-300 rounded-full border dark:border-white/50 border-slate-400"></div>
+                        <h4 class="font-semibold text-sm text-slate-700 dark:text-white/80">Tiểu học Tây Hiếu</h4>
+                        <p class="text-[11px] dark:text-textMuted text-slate-500 mt-0.5">Cấp 1</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. BIZ & TECH STACK -->
+            <div class="bento-card col-span-2 row-span-1 p-6 flex flex-col justify-center">
+                <div class="text-xs font-mono text-brand mb-2">&lt;skills&gt;</div>
+                <div class="marquee-container w-full mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
+                    <div class="marquee-content flex gap-5 text-2xl dark:text-white/50 text-slate-400 items-center">
+                        <i class="fa-brands fa-shopify hover:text-[#95BF47] transition-colors"></i>
+                        <i class="fa-brands fa-wordpress hover:text-[#21759b] transition-colors"></i>
+                        <i class="fa-brands fa-figma hover:text-[#F24E1E] transition-colors"></i>
+                        <i class="fa-solid fa-chart-line hover:text-emerald-400 transition-colors"></i>
+                        <i class="fa-brands fa-google hover:text-[#4285F4] transition-colors"></i>
+                        <i class="fa-brands fa-html5 hover:text-[#E34F26] transition-colors"></i>
+                        <i class="fa-brands fa-css3-alt hover:text-[#1572B6] transition-colors"></i>
+                        <i class="fa-brands fa-shopify"></i>
+                        <i class="fa-brands fa-wordpress"></i>
+                        <i class="fa-brands fa-figma"></i>
+                        <i class="fa-solid fa-chart-line"></i>
+                        <i class="fa-brands fa-google"></i>
+                        <i class="fa-brands fa-html5"></i>
+                        <i class="fa-brands fa-css3-alt"></i>
+                    </div>
+                </div>
+                <div class="text-xs font-mono text-brand mt-2 text-right">&lt;/skills&gt;</div>
+            </div>
+
+            <!-- 4. ALL PROJECTS ARCHIVE (Nút Mở Modal) -->
+            <button onclick="openProjects()" class="bento-card col-span-2 row-span-1 p-6 flex items-center justify-between group 
+                        dark:bg-[#18181b] bg-white border border-slate-200 dark:border-white/5 
+                        hover:bg-brand dark:hover:bg-brand text-left transition-all">
+                <div>
+                    <h3 class="font-extrabold text-2xl dark:text-white text-slate-900 group-hover:text-white mb-1">15+ Projects</h3>
+                    <p class="text-xs dark:text-textMuted text-slate-500 font-mono group-hover:text-white/80">E-com, Share Acc, Tools...</p>
+                </div>
+                <div class="w-12 h-12 rounded-full dark:bg-white/10 bg-slate-100 group-hover:bg-white flex items-center justify-center transition-colors">
+                    <i class="ph-bold ph-arrow-up-right text-xl dark:text-white text-slate-900 group-hover:text-brand"></i>
+                </div>
+            </button>
+
+            <!-- 5. LOCATION MAP -->
+            <div class="bento-card col-span-2 row-span-1 p-5 relative overflow-hidden group flex items-center gap-4">
+                <div class="absolute right-0 top-0 w-32 h-32 bg-[url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Hanoi_location_map.svg/1024px-Hanoi_location_map.svg.png')] bg-contain bg-no-repeat opacity-10 dark:opacity-10 dark:filter dark:invert opacity-20 group-hover:scale-110 transition-all duration-500 translate-x-4 -translate-y-4"></div>
+                <div class="w-12 h-12 rounded-full dark:bg-white/5 bg-slate-100 flex items-center justify-center text-xl dark:text-white/80 text-slate-700 shrink-0 relative z-10">
+                    <i class="ph-fill ph-map-pin"></i>
+                </div>
+                <div class="relative z-10">
+                    <h3 class="font-bold text-base text-slate-800 dark:text-white">Thanh Xuân, Hà Nội</h3>
+                    <p class="text-xs font-mono dark:text-textMuted text-slate-500 mt-1">Nơi ra lò các E-com masters</p>
+                </div>
+            </div>
+
+            <!-- ROW 4: SOCIAL LINKS (6 Columns total) -->
+            <a href="https://github.com/luonghiii" target="_blank" class="bento-card col-span-1 row-span-1 flex flex-col items-center justify-center p-4 group dark:hover:bg-white dark:hover:text-black hover:bg-slate-900 hover:text-white">
+                <i class="fa-brands fa-github text-3xl mb-3 group-hover:-translate-y-1 transition-transform dark:text-white text-slate-800 group-hover:text-white dark:group-hover:text-black"></i>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider dark:text-white text-slate-800 group-hover:text-white dark:group-hover:text-black">GitHub</span>
+            </a>
+
+            <a href="https://facebook.com/luonghiii" target="_blank" class="bento-card col-span-1 row-span-1 flex flex-col items-center justify-center p-4 group relative overflow-hidden">
+                <div class="absolute inset-0 bg-[#1877F2] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <i class="fa-brands fa-facebook-f text-3xl mb-3 relative z-10 text-[#1877F2] group-hover:text-white transition-colors group-hover:-translate-y-1"></i>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider relative z-10 dark:text-white text-slate-800 group-hover:text-white">Facebook</span>
+            </a>
+
+            <a href="https://www.instagram.com/luonghiii" target="_blank" class="bento-card col-span-1 row-span-1 flex flex-col items-center justify-center p-4 group relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <i class="fa-brands fa-instagram text-3xl mb-3 relative z-10 text-pink-500 group-hover:text-white transition-colors group-hover:-translate-y-1"></i>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider relative z-10 dark:text-white text-slate-800 group-hover:text-white">Insta</span>
+            </a>
+
+            <a href="https://t.me/luonghiii" target="_blank" class="bento-card col-span-1 row-span-1 flex flex-col items-center justify-center p-4 group relative overflow-hidden">
+                <div class="absolute inset-0 bg-telegram opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <i class="fa-brands fa-telegram text-3xl mb-3 relative z-10 text-telegram group-hover:text-white transition-colors group-hover:-translate-y-1"></i>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider relative z-10 dark:text-white text-slate-800 group-hover:text-white">Tele</span>
+            </a>
+
+            <a href="http://zalo.me/0916508081" target="_blank" class="bento-card col-span-2 row-span-1 flex flex-col items-center justify-center p-4 group relative overflow-hidden border-zalo/30 hover:border-zalo">
+                <div class="absolute inset-0 bg-zalo/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="font-extrabold text-3xl mb-2 relative z-10 text-zalo group-hover:-translate-y-1 transition-transform tracking-tighter">Zalo</div>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider relative z-10 dark:text-white/80 text-slate-700 group-hover:text-zalo">0916.508.081</span>
+            </a>
+
+            <!-- 11. CONTACT / EMAIL -->
+            <a href="mailto:luonghii123@gmail.com" class="bento-card col-span-2 md:col-span-4 lg:col-span-6 row-span-1 p-6 flex flex-col items-center justify-center text-center group dark:bg-white/5 bg-slate-100 hover:bg-brand dark:hover:bg-white dark:text-white text-slate-800 hover:text-white dark:hover:text-black transition-all">
+                <div class="flex items-center gap-2 text-xl font-bold mb-1">
+                    luonghii123@gmail.com <i class="ph-bold ph-paper-plane-tilt group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform"></i>
+                </div>
+                <p class="text-sm dark:text-textMuted text-slate-500 group-hover:text-white/80 dark:group-hover:text-neutral-500">Let's talk E-commerce & Business</p>
+            </a>
+
+        </div>
+        
+        <footer class="mt-12 mb-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono dark:text-textMuted text-slate-500 px-2">
+            <p>Made with <i class="fa-solid fa-heart text-red-500 mx-1"></i> & ☕ by Luong</p>
+            <p>&copy; 2026 All rights reserved.</p>
+        </footer>
+    </main>
+
+    <!-- ============================================== -->
+    <!-- MODAL HIỂN THỊ TẤT CẢ PROJECTS -->
+    <!-- ============================================== -->
+    <div id="projectsModal" class="fixed inset-0 z-50 hidden flex-col items-center justify-end md:justify-center p-0 md:p-4 bg-black/60 backdrop-blur-md opacity-0 transition-opacity duration-300">
+        <div id="modalContent" class="w-full h-[85vh] md:h-[80vh] max-w-[900px] dark:bg-[#111111] bg-white md:rounded-[2rem] rounded-t-[2rem] shadow-2xl flex flex-col transform translate-y-full md:scale-95 transition-transform duration-300 border dark:border-white/10 border-slate-200 overflow-hidden relative">
+            
+            <div class="p-6 border-b dark:border-white/5 border-slate-100 flex justify-between items-center sticky top-0 dark:bg-[#111111]/90 bg-white/90 backdrop-blur-md z-20">
+                <div>
+                    <h2 class="text-2xl font-extrabold dark:text-white text-slate-900 flex items-center gap-2">
+                        <i class="ph-fill ph-rocket-launch text-brand"></i> Project Archive
+                    </h2>
+                    <p class="text-sm dark:text-textMuted text-slate-500 mt-1">15 Websites by Lương</p>
+                </div>
+                <button onclick="closeProjects()" class="w-10 h-10 rounded-full dark:bg-white/10 bg-slate-100 flex items-center justify-center dark:hover:bg-white/20 hover:bg-slate-200 transition-colors dark:text-white text-slate-700">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto modal-scroll flex-1 bg-slate-50 dark:bg-transparent">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="projectGrid">
+                    <!-- Javascript sẽ render 15 card vào đây -->
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // --- THEME TOGGLE LOGIC ---
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // --- 1. Hiệu ứng Hover 3D ---
+        const tiltCard = document.getElementById('tilt-card');
+        tiltCard.addEventListener('mousemove', (e) => {
+            const rect = tiltCard.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -8; 
+            const rotateY = ((x - centerX) / centerX) * 8;
+            tiltCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+        tiltCard.addEventListener('mouseleave', () => {
+            tiltCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        });
+
+        // --- 2. MODAL PROJECTS LOGIC (UPDATED DATA) ---
+        const modal = document.getElementById('projectsModal');
+        const modalContent = document.getElementById('modalContent');
+        const projectGrid = document.getElementById('projectGrid');
+
+        // Đã update chuẩn data mới cậu vừa cung cấp nha C!
+        const projectsData = [
+            { name: "Share Netflix v1", link: "netflix.luonghiii.id.vn", type: "Legacy UI", icon: "fa-brands fa-neos text-red-500", color: "from-red-500/20 to-black" },
+            { name: "Netflix & GPT Plus", link: "freeaccount.luonghiii.id.vn", type: "Premium Free", icon: "fa-solid fa-crown text-teal-500", color: "from-teal-500/20 to-transparent" },
+            { name: "Share Acc Liên Quân", link: "lq.luonghiii.id.vn", type: "Free Acc", icon: "fa-solid fa-gift text-orange-500", color: "from-orange-500/20 to-transparent" },
+            { name: "E-Commerce Web", link: "e-commerce-ooo.vercel.app", type: "Shop/Biz", icon: "ph-fill ph-shopping-bag text-brand", color: "from-blue-500/20 to-transparent" },
+            { name: "PhimM Streaming", link: "phimm.luonghiii.id.vn", type: "Movie App", icon: "fa-solid fa-film text-purple-500", color: "from-purple-500/20 to-transparent" },
+            { name: "Locket Web", link: "locket.luonghiii.id.vn", type: "Social Tool", icon: "fa-solid fa-heart text-yellow-400", color: "from-yellow-400/20 to-transparent" },
+            { name: "Tải Video Tool", link: "taivideo.luonghiii.id.vn", type: "Utility Web", icon: "fa-solid fa-download text-emerald-500", color: "from-emerald-500/20 to-transparent" },
+            { name: "Web Lớp Thái Hòa", link: "luonghiii.github.io/thaihoa/weblop/index.html", type: "School Class", icon: "fa-solid fa-school text-pink-500", color: "from-pink-500/20 to-transparent" },
+            { name: "German by Luong", link: "germanbyluong.vercel.app", type: "Edu App", icon: "fa-solid fa-language text-cyan-500", color: "from-cyan-500/20 to-transparent" },
+            { name: "Shop Luonghiii", link: "shop.luonghiii.id.vn", type: "Storefront", icon: "fa-solid fa-store text-indigo-500", color: "from-indigo-500/20 to-transparent" },
+            { name: "Timmm App", link: "timmm.vercel.app", type: "Entertainment", icon: "fa-solid fa-face-smile text-rose-400", color: "from-rose-400/20 to-transparent" },
+            { name: "Web Profile (Cũ)", link: "luonghiii.github.io/web/profile/", type: "Portfolio v1", icon: "fa-regular fa-id-card text-slate-500", color: "from-slate-500/20 to-transparent" },
+            { name: "VD Viewer", link: "vd.luonghiii.id.vn", type: "Media Tool", icon: "fa-solid fa-play text-red-400", color: "from-red-400/20 to-transparent" },
+            { name: "Phim Server 2", link: "phim.luonghiii.id.vn", type: "Movie Backup", icon: "fa-solid fa-video text-fuchsia-500", color: "from-fuchsia-500/20 to-transparent" },
+            { name: "Xem Phim Online", link: "xemphim.luonghiii.id.vn", type: "Movie Portal", icon: "fa-solid fa-ticket text-amber-500", color: "from-amber-500/20 to-transparent" }
+        ];
+
+        function renderProjects() {
+            projectGrid.innerHTML = '';
+            projectsData.forEach((p, idx) => {
+                const hrefUrl = p.link.startsWith('http') ? p.link : 'https://' + p.link;
+                const card = `
+                <a href="${hrefUrl}" target="_blank" class="group relative overflow-hidden rounded-2xl dark:bg-[#1a1a1e] bg-white border dark:border-white/5 border-slate-200 p-5 hover:-translate-y-1 transition-all hover:shadow-xl dark:hover:shadow-brand/10">
+                    <div class="absolute inset-0 bg-gradient-to-br ${p.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="relative z-10 flex items-start justify-between">
+                        <div class="w-12 h-12 rounded-xl dark:bg-black/50 bg-slate-50 flex items-center justify-center shadow-inner border dark:border-white/10 border-slate-200 mb-4">
+                            <i class="${p.icon} text-xl"></i>
+                        </div>
+                        <i class="ph-bold ph-arrow-up-right dark:text-white/20 text-slate-300 group-hover:text-brand transition-colors"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="font-bold text-lg dark:text-white text-slate-900 mb-1">${p.name}</h3>
+                        <p class="text-xs font-mono dark:text-textMuted text-slate-500 truncate mb-3">${p.link}</p>
+                        <span class="inline-block px-2 py-1 rounded-md dark:bg-white/10 bg-slate-100 text-[10px] font-bold uppercase tracking-wider dark:text-white/70 text-slate-600">${p.type}</span>
+                    </div>
+                </a>`;
+                projectGrid.innerHTML += card;
+            });
+        }
+
+        renderProjects();
+
+        function openProjects() {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                if(window.innerWidth >= 768) {
+                    modalContent.classList.remove('scale-95');
+                } else {
+                    modalContent.classList.remove('translate-y-full');
+                }
+            }, 10);
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeProjects() {
+            modal.classList.add('opacity-0');
+            if(window.innerWidth >= 768) {
+                modalContent.classList.add('scale-95');
+            } else {
+                modalContent.classList.add('translate-y-full');
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeProjects();
+        });
+    </script>
+</body>
+</html>
